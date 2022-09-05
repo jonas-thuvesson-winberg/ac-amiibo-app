@@ -1,0 +1,27 @@
+<div class="content" role="main">
+  <mat-form-field class="character-select" appearance="fill">
+    <mat-label>Animal Crossing Amiibo Card</mat-label>
+    <mat-select [(value)]="selected">
+      <mat-option
+        *ngFor="let item of characters | keyvalue"
+        [value]="item.value.id"
+      >
+        {{ item.value.id + " " + item.value.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="selected">
+    <div class="character-section">
+      <div class="character-info">
+        <h2><strong>number: </strong>{{ characters.get(selected)?.id }}</h2>
+        <h2><strong>name: </strong>{{ characters.get(selected)?.name }}</h2>
+        <h2>
+          <strong>birthday: </strong>{{ characters.get(selected)?.birthday }}
+        </h2>
+      </div>
+      <img [src]="characters.get(selected)?.imgUrl" />
+    </div>
+  </ng-container>
+
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,30 @@
+.content {
+    margin: 20px auto;
+    //width: 80%;
+    max-width: 300px;
+    text-align: center;
+
+    .character {
+        &-select {
+            display: block;
+        }
+
+        &-section {
+            display: block;
+            border: solid #444 1px;
+            border-radius: 10px;
+            padding: 30px;
+
+            img {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        &-info {
+            text-align: left;
+        }
+    }
+
+   
+}
