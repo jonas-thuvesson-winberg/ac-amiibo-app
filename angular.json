@@ -10,7 +10,7 @@
           "style": "scss"
         }
       },
-      "root": "ac-amiibo-card-app",
+      "root": "ac-amiibo-app",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
