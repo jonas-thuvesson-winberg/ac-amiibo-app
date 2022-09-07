@@ -3,7 +3,14 @@
     <mat-label>Animal Crossing Amiibo Card</mat-label>
     <mat-select [(value)]="selected">
       <mat-option *ngFor="let id of idsSorted" [value]="id">
-        {{ id + " " + characters.get(id)!.name }}
+        {{
+          id +
+            " - " +
+            characters.get(id)!.name +
+            (characters.get(id)!.owned
+              ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✅"
+              : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -55,13 +62,6 @@
         *ngTemplateOutlet="
           characterProperty;
           context: { label: 'Type', value: type }
-        "
-      ></ng-container>
-
-      <ng-container
-        *ngTemplateOutlet="
-          characterProperty;
-          context: { label: 'Orientation', value: orientation }
         "
       ></ng-container>
 

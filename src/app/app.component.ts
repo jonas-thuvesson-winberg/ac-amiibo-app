@@ -68,4 +68,8 @@ export class AppComponent implements OnInit {
         this.idsSorted.sort();
       });
   }
+
+  // getNumberOfCards(): [number, number] {
+  //   return [this.characters.keys().length, this.characters.values().filter(i => i.owned )]
+  // }
 }
