@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 interface Character2 {
   id: string;
@@ -14,6 +14,8 @@ class Character {
   type: string;
   birthday: string;
   imgUrl: string;
+  orientation: string;
+  owned: boolean;
 
   constructor(private row: string) {
     const columns = row.split(',');
@@ -22,6 +24,16 @@ class Character {
     this.type = columns[2];
     this.birthday = columns[3];
     this.imgUrl = columns[4];
+    this.orientation = columns[5];
+    this.owned = columns[6].toLowerCase().trim() === 'true';
+  }
+
+  hasEssentialProperties(): boolean {
+    return !!this.id && !!this.name;
+  }
+
+  asObject(): object {
+    return { ...this };
   }
 }
 
@@ -30,12 +42,13 @@ class Character {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'ac-amiibo-card-app';
   selected: string = '';
   characters = new Map<string, Character>();
+  idsSorted: string[] = [];
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     fetch(
       'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
       {
@@ -48,8 +61,11 @@ export class AppComponent implements AfterViewInit {
         for (let i = 1; i < rows.length; i++) {
           const id = rows[i].split(',')[0];
           const c = new Character(rows[i]);
-          this.characters.set(id, c);
+          if (c.hasEssentialProperties()) this.characters.set(id, c);
         }
+
+        this.idsSorted = Array.from(this.characters.keys());
+        this.idsSorted.sort();
       });
   }
 }

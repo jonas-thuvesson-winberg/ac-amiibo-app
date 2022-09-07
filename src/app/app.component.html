@@ -2,26 +2,87 @@
   <mat-form-field class="character-select" appearance="fill">
     <mat-label>Animal Crossing Amiibo Card</mat-label>
     <mat-select [(value)]="selected">
-      <mat-option
-        *ngFor="let item of characters | keyvalue"
-        [value]="item.value.id"
-      >
-        {{ item.value.id + " " + item.value.name }}
+      <mat-option *ngFor="let id of idsSorted" [value]="id">
+        {{ id + " " + characters.get(id)!.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <ng-container *ngIf="selected">
     <div class="character-section">
-      <div class="character-info">
-        <h2><strong>number: </strong>{{ characters.get(selected)?.id }}</h2>
-        <h2><strong>name: </strong>{{ characters.get(selected)?.name }}</h2>
-        <h2>
-          <strong>birthday: </strong>{{ characters.get(selected)?.birthday }}
-        </h2>
-      </div>
-      <img [src]="characters.get(selected)?.imgUrl" />
+      <ng-container
+        *ngTemplateOutlet="
+          character;
+          context: characters.get(selected)!.asObject()
+        "
+      >
+      </ng-container>
     </div>
   </ng-container>
+
+  <ng-template
+    #character
+    let-id="id"
+    let-name="name"
+    let-type="type"
+    let-birthday="birthday"
+    let-orientation="orientation"
+    let-owned="owned"
+    let-imgUrl="imgUrl"
+  >
+    <div class="character-properties">
+      <ng-container
+        *ngTemplateOutlet="
+          characterProperty;
+          context: { label: 'ID', value: id }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          characterProperty;
+          context: { label: 'Name', value: name }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          characterProperty;
+          context: { label: 'Birthday', value: birthday }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          characterProperty;
+          context: { label: 'Type', value: type }
+        "
+      ></ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          characterProperty;
+          context: { label: 'Orientation', value: orientation }
+        "
+      ></ng-container>
+
+      <div class="character-property-container">
+        <div class="character-property-label">Owned:</div>
+        <div class="character-property-value">
+          {{ owned ? "Yes" : "No" }}
+        </div>
+      </div>
+    </div>
+    <img *ngIf="imgUrl" class="character-image" [src]="imgUrl" />
+  </ng-template>
+
+  <ng-template #characterProperty let-label="label" let-value="value">
+    <div *ngIf="value" class="character-property-container">
+      <div class="character-property-label">{{ label }}:</div>
+      <div class="character-property-value">
+        {{ value }}
+      </div>
+    </div>
+  </ng-template>
 
   <router-outlet></router-outlet>
 </div>
