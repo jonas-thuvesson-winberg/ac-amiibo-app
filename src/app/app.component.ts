@@ -70,8 +70,8 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     fetch(
-      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaNwbk3ge14yq_8jXzLIuQ-kTL1KHCLjujI7bYourD4qXJGM7p502RX_ltrWVIaAKoVJtCELwQAuB5/pub?output=csv',
-      //'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
+      //'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaNwbk3ge14yq_8jXzLIuQ-kTL1KHCLjujI7bYourD4qXJGM7p502RX_ltrWVIaAKoVJtCELwQAuB5/pub?output=csv',
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
       {
         method: 'GET',
       }
