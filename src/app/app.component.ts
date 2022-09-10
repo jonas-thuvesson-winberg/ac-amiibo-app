@@ -13,7 +13,7 @@ class Character {
   name: string;
   type: string;
   birthday: string;
-  imgUrl: string;
+  imgUrl: string | undefined;
   orientation: string;
   owned: boolean;
 
@@ -23,9 +23,29 @@ class Character {
     this.name = columns[1];
     this.type = columns[2];
     this.birthday = columns[3];
-    this.imgUrl = columns[4];
     this.orientation = columns[5];
     this.owned = columns[6].toLowerCase().trim() === 'true';
+    const base64ColumnOffset = Number.parseInt(columns[7]);
+    if (base64ColumnOffset && base64ColumnOffset !== NaN) {
+      this.imgUrl = this.createBase64Source(columns, base64ColumnOffset);
+    } else if (columns[4]) {
+      this.imgUrl = columns[4];
+    }
+  }
+
+  private createBase64Source(columns: string[], offset: number): string {
+    const mime = columns[offset++];
+    let tempBase64 = `data:${mime};base64, `;
+    while (true) {
+      if (offset > columns.length - 1) break;
+      const part = columns[offset++]?.trim();
+      if (part && part.length > 0) {
+        tempBase64 += part;
+      } else {
+        break;
+      }
+    }
+    return tempBase64;
   }
 
   hasEssentialProperties(): boolean {
@@ -48,9 +68,10 @@ export class AppComponent implements OnInit {
   characters = new Map<string, Character>();
   idsSorted: string[] = [];
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     fetch(
-      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaNwbk3ge14yq_8jXzLIuQ-kTL1KHCLjujI7bYourD4qXJGM7p502RX_ltrWVIaAKoVJtCELwQAuB5/pub?output=csv',
+      //'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
       {
         method: 'GET',
       }
@@ -68,6 +89,12 @@ export class AppComponent implements OnInit {
         this.idsSorted.sort();
       });
   }
+
+  // public padSelectLabel(label: string) {
+  //   const n = 30 - label.length;
+  //   for (let i = 0; i < n; i++) label = label + '&nbsp;';
+  //   return label;
+  // }
 
   // getNumberOfCards(): [number, number] {
   //   return [this.characters.keys().length, this.characters.values().filter(i => i.owned )]

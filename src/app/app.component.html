@@ -4,12 +4,10 @@
     <mat-select [(value)]="selected">
       <mat-option *ngFor="let id of idsSorted" [value]="id">
         {{
-          id +
+          (characters.get(id)!.owned ? "✅ " : "❌ ") +
+            id +
             " - " +
-            characters.get(id)!.name +
-            (characters.get(id)!.owned
-              ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✅"
-              : "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+            characters.get(id)!.name
         }}
       </mat-option>
     </mat-select>
