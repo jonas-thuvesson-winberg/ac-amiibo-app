@@ -86,7 +86,27 @@ export class AppComponent implements OnInit {
         }
 
         this.idsSorted = Array.from(this.characters.keys());
-        this.idsSorted.sort();
+        this.idsSorted.sort((a, b) => {
+          a = a.toLowerCase();
+          b = b.toLowerCase();
+
+          if (a.indexOf('s') != -1 && b.indexOf('s') === -1) return -1;
+          else if (b.indexOf('s') != -1 && a.indexOf('s') === -1) return 1;
+          else if (a.indexOf('s') != -1 && b.indexOf('s') != -1) {
+            a = a.substring(1);
+            b = b.substring(1);
+          }
+
+          if (a.length > b.length) return 1;
+          else if (b.length > a.length) return -1;
+
+          const aAsNum = Number.parseInt(a);
+          const bAsNum = Number.parseInt(b);
+
+          if (aAsNum > bAsNum) return 1;
+          else if (bAsNum > aAsNum) return -1;
+          else return 0;
+        });
       });
   }
 
