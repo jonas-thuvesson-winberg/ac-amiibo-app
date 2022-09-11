@@ -272,6 +272,9 @@ Apache-2.0
  
 
 
+rxjs-http-client
+MIT
+
 tslib
 0BSD
 Copyright (c) Microsoft Corporation.
