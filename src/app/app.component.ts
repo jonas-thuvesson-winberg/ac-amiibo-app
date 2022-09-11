@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import { RxJSHttpClient } from 'rxjs-http-client';
 interface Character2 {
   id: string;
   name: string;
@@ -62,22 +63,32 @@ class Character {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'ac-amiibo-card-app';
   selected: string = '';
   characters = new Map<string, Character>();
   idsSorted: string[] = [];
+  subscriptionCutter$ = new Subject<void>();
+  httpClient: RxJSHttpClient | undefined;
+  dataSub: Subscription | undefined;
+
+  ngOnDestroy(): void {
+    this.subscriptionCutter$.next();
+    this.subscriptionCutter$.unsubscribe();
+    this.dataSub?.unsubscribe();
+  }
 
   public ngOnInit(): void {
-    fetch(
-      //'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaNwbk3ge14yq_8jXzLIuQ-kTL1KHCLjujI7bYourD4qXJGM7p502RX_ltrWVIaAKoVJtCELwQAuB5/pub?output=csv',
-      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv',
-      {
-        method: 'GET',
-      }
-    )
-      .then((response) => response.text())
-      .then((body) => {
+    this.httpClient = new RxJSHttpClient();
+    this.dataSub = this.httpClient
+      .get(
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vRkbDvXTEDxtMrbHaLw0_SpO4zWskaL6lX_WkhTfwmZ_cifkTuPQwZkacJwSOO5i1geS6RMOYOW_4aq/pub?output=csv'
+      )
+      .pipe(
+        switchMap((res) => res.text()),
+        takeUntil(this.subscriptionCutter$)
+      )
+      .subscribe((body) => {
         const rows = body.split('\n');
         for (let i = 1; i < rows.length; i++) {
           const id = rows[i].split(',')[0];
@@ -109,14 +120,4 @@ export class AppComponent implements OnInit {
         });
       });
   }
-
-  // public padSelectLabel(label: string) {
-  //   const n = 30 - label.length;
-  //   for (let i = 0; i < n; i++) label = label + '&nbsp;';
-  //   return label;
-  // }
-
-  // getNumberOfCards(): [number, number] {
-  //   return [this.characters.keys().length, this.characters.values().filter(i => i.owned )]
-  // }
 }
