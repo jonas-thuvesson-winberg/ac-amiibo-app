@@ -26,7 +26,12 @@ class Character {
     this.birthday = columns[3];
     this.orientation = columns[5];
     this.owned = columns[6].toLowerCase().trim() === 'true';
-    this.imgUrl = `/assets/cards/${this.id}-${this.name}.png`;
+    this.imgUrl = `${
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      window.location.pathname
+    }assets/cards/${this.id}-${this.name}.png`;
   }
 
   private createBase64Source(columns: string[], offset: number): string {
