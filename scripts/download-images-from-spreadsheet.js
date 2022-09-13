@@ -8,7 +8,7 @@ const writeFile = (characterId, characterName, buffer) => {
   return fileName;
 };
 
-//fsExtra.emptyDirSync("../src/assets/cards");
+fsExtra.emptyDirSync("../src/assets/cards");
 
 request(
   {
