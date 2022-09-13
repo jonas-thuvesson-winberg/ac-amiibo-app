@@ -26,12 +26,7 @@ class Character {
     this.birthday = columns[3];
     this.orientation = columns[5];
     this.owned = columns[6].toLowerCase().trim() === 'true';
-    const base64ColumnOffset = Number.parseInt(columns[7]);
-    if (base64ColumnOffset && base64ColumnOffset !== NaN) {
-      this.imgUrl = this.createBase64Source(columns, base64ColumnOffset);
-    } else if (columns[4]) {
-      this.imgUrl = columns[4];
-    }
+    this.imgUrl = `/assets/cards/${this.id}-${this.name}.png`;
   }
 
   private createBase64Source(columns: string[], offset: number): string {
@@ -79,6 +74,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    console.log(decodeURI(window.location.search));
+
+    let target: string;
+    if (window.location.search) {
+      target = window.location.search.split('=')[1];
+    }
+
     this.httpClient = new RxJSHttpClient();
     this.dataSub = this.httpClient
       .get(
@@ -118,6 +120,19 @@ export class AppComponent implements OnInit, OnDestroy {
           else if (bAsNum > aAsNum) return -1;
           else return 0;
         });
+
+        if (target) {
+          this.selected = target.split('-')[0];
+        }
       });
+  }
+
+  handleSelect(event: any) {
+    console.log(event);
+    window.history.pushState(
+      undefined,
+      '',
+      `?char=${event.value}-${this.characters.get(event.value)!.name}`
+    );
   }
 }

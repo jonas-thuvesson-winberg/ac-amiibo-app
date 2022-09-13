@@ -1,7 +1,7 @@
 <div class="content" role="main">
   <mat-form-field class="character-select" appearance="fill">
     <mat-label>Animal Crossing Amiibo Card</mat-label>
-    <mat-select [(value)]="selected">
+    <mat-select [(value)]="selected" (selectionChange)="handleSelect($event)">
       <mat-option *ngFor="let id of idsSorted" [value]="id">
         {{
           (characters.get(id)!.owned ? "✅ " : "❌ ") +
