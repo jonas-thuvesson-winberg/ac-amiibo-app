@@ -1,4 +1,5 @@
 <div class="content" role="main">
+  <div *ngIf="owned">Owned: {{ owned }} / 504</div>
   <mat-form-field class="character-select" appearance="fill">
     <mat-label>Animal Crossing Amiibo Card</mat-label>
     <mat-select [(value)]="selected" (selectionChange)="handleSelect($event)">

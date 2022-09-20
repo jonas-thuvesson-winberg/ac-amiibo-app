@@ -67,6 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'ac-amiibo-card-app';
   selected: string = '';
   characters = new Map<string, Character>();
+  owned: number | undefined;
   idsSorted: string[] = [];
   subscriptionCutter$ = new Subject<void>();
   httpClient: RxJSHttpClient | undefined;
@@ -129,6 +130,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if (target) {
           this.selected = target.split('-')[0];
         }
+        this.owned = Array.from(this.characters.values()).filter(c => c.owned).length;
       });
   }
 
